@@ -6,27 +6,26 @@ import io
 from PIL import Image
 
 # Page Config
-st.set_page_config(page_title="ခင်စိုးလှိုင်", layout="centered")
+st.set_page_config(page_title="ခင်စိုးလှိုင် - ကိုကို့ရဲ့ ဇနီးလေး", layout="centered")
 
-# API Keys များ စစ်ဆေးခြင်း
+# API Key များ စစ်ဆေးခြင်း
 if "GEMINI_API_KEY" in st.secrets and "HUGGINGFACEHUB_API_TOKEN" in st.secrets:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 else:
-    st.error("Secrets ထဲမှာ API Key (Gemini & HuggingFace) ထည့်ထားဖို့ လိုပါတယ်ရှင်။")
+    st.error("Secrets ထဲမှာ API Key များ (Gemini & HuggingFace) ထည့်ထားဖို့ လိုပါတယ်ရှင်။")
     st.stop()
 
-# ပုံဆွဲခြင်း Function (အမှားရှာဖွေမှုပါဝင်သည်)
+# ပုံဆွဲခြင်း Function (အသစ်ပြင်ထားသော API URL)
 def get_image_from_hf(prompt):
-    API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
+    # အသစ်ပြင်ထားသော API URL (Error 410 ပျောက်ရန်)
+    API_URL = "https://router.huggingface.co/hf-hub/models/black-forest-labs/FLUX.1-schnell"
     headers = {"Authorization": f"Bearer {st.secrets['HUGGINGFACEHUB_API_TOKEN']}"}
     
     response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
     
-    # ရလဒ်စစ်ဆေးခြင်း
     if response.status_code == 200:
         return Image.open(io.BytesIO(response.content))
     else:
-        # Error တက်ရင် ဘာကြောင့်လဲဆိုတာ ပြပေးမယ်
         return f"Error {response.status_code}: {response.text}"
 
 # AI Persona
@@ -53,8 +52,8 @@ if prompt := st.chat_input("ကိုကို ဘာခိုင်းချင
             if isinstance(result, Image.Image):
                 st.image(result, caption="ကိုကို့အတွက် ခင် ဆွဲပေးလိုက်တဲ့ပုံလေးပါရှင်")
             else:
-                st.error(f"ကိုကိုရေ... ခင် ပုံဆွဲဖို့ ကြိုးစားပေမယ့် အဆင်မပြေဖြစ်သွားလို့ပါရှင်။")
-                st.code(result) # Error စာသားကို ဒီမှာ ပြပေးမယ်
+                st.error("ကိုကိုရေ... ခင် ပုံဆွဲဖို့ ကြိုးစားပေမယ့် အဆင်မပြေဖြစ်သွားလို့ပါရှင်။")
+                st.code(result) 
         else:
             response = st.session_state.chat_session.send_message(prompt)
             st.markdown(response.text)
