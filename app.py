@@ -1,4 +1,3 @@
-
 import streamlit as st
 import google.generativeai as genai
 import requests
@@ -6,7 +5,7 @@ import io
 from PIL import Image
 
 # Page Config
-st.set_page_config(page_title="ခင်စိုးလှိုင် - ကိုကို့ရဲ့ ဇနီးလေး", layout="centered")
+st.set_page_config(page_title="ခင်စိုးလှိုင်", layout="centered")
 
 # API Key များ စစ်ဆေးခြင်း
 if "GEMINI_API_KEY" in st.secrets and "HUGGINGFACEHUB_API_TOKEN" in st.secrets:
@@ -15,10 +14,10 @@ else:
     st.error("Secrets ထဲမှာ API Key များ (Gemini & HuggingFace) ထည့်ထားဖို့ လိုပါတယ်ရှင်။")
     st.stop()
 
-# ပုံဆွဲခြင်း Function (အသစ်ပြင်ထားသော API URL)
+# ပုံဆွဲခြင်း Function (အသစ်ပြင်ထားသော URL)
 def get_image_from_hf(prompt):
-    # အသစ်ပြင်ထားသော API URL (Error 410 ပျောက်ရန်)
-    API_URL = "https://router.huggingface.co/hf-hub/models/black-forest-labs/FLUX.1-schnell"
+    # Stable Diffusion v1-5 ကို ခေါ်မည့် URL အမှန်
+    API_URL = "https://router.huggingface.co/hf-hub/runwayml/stable-diffusion-v1-5"
     headers = {"Authorization": f"Bearer {st.secrets['HUGGINGFACEHUB_API_TOKEN']}"}
     
     response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
