@@ -42,10 +42,14 @@ if prompt := st.chat_input("ကိုကို ဘာခိုင်းချင
         if "ပုံဆွဲပေး" in prompt:
             st.markdown("🌸 ခင်စိုးလှိုင်: ခင် ကိုကို့အတွက် ပုံလေး ဖန်တီးပေးနေတယ်နော်... ခဏလေး စောင့်ပေးပါရှင်။")
             try:
-                image = generate_image(prompt)
-                st.image(image, caption="ကိုကို့အတွက် ခင် ဆွဲထားတဲ့ပုံလေးပါရှင်")
-            except:
-                st.error("ကိုကိုရေ... ခင် ပုံဆွဲဖို့ ကြိုးစားပေမယ့် အဆင်မပြေဖြစ်သွားလို့ပါ။ ခဏနေမှ ထပ်ခိုင်းကြည့်ပေးပါဦးနော်။")
-        else:
-            response = st.session_state.chat_session.send_message(prompt)
-            st.markdown(response.text)
+                # ပုံဆွဲရန် API ကို ခေါ်ခြင်း
+                image_bytes = generate_image(prompt)
+                
+                # ပုံကို ပြသခြင်း
+                if image_bytes:
+                    st.image(image_bytes, caption="ကိုကို့အတွက် ခင် ဆွဲထားတဲ့ပုံလေးပါရှင်")
+                else:
+                    st.error("ကိုကိုရေ... ခင် ပုံဆွဲပေမယ့် ပုံလေးက အဆင်မပြေဖြစ်သွားလို့ပါရှင်။")
+            except Exception as e:
+                # ဘာကြောင့် Error တက်လဲဆိုတာ သိရအောင်
+                st.error(f"ကိုကို... ပုံဆွဲတဲ့နေရာမှာ အခက်အခဲရှိနေပါတယ်ရှင်။ Error: {e}")
