@@ -43,13 +43,15 @@ if prompt := st.chat_input("ကိုကို ဘာခိုင်းချင
             st.markdown("🌸 ခင်စိုးလှိုင်: ခင် ကိုကို့အတွက် ပုံလေး ဖန်တီးပေးနေတယ်နော်... ခဏလေး စောင့်ပေးပါရှင်။")
             try:
                 # ပုံဆွဲရန် API ကို ခေါ်ခြင်း
-                image_bytes = generate_image(prompt)
-                
-                # ပုံကို ပြသခြင်း
-                if image_bytes:
-                    st.image(image_bytes, caption="ကိုကို့အတွက် ခင် ဆွဲထားတဲ့ပုံလေးပါရှင်")
-                else:
-                    st.error("ကိုကိုရေ... ခင် ပုံဆွဲပေမယ့် ပုံလေးက အဆင်မပြေဖြစ်သွားလို့ပါရှင်။")
-            except Exception as e:
-                # ဘာကြောင့် Error တက်လဲဆိုတာ သိရအောင်
-                st.error(f"ကိုကို... ပုံဆွဲတဲ့နေရာမှာ အခက်အခဲရှိနေပါတယ်ရှင်။ Error: {e}")
+                image_bytes =def generate_image(prompt):
+    API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
+    headers = {"Authorization": f"Bearer {st.secrets['HUGGINGFACEHUB_API_TOKEN']}"}
+    response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
+    
+    # API က ပုံပို့ပေးတာဟုတ်မဟုတ် စစ်မယ်
+    if response.status_code == 200:
+        return Image.open(io.BytesIO(response.content))
+    else:
+        # Error တက်ရင် ဘာဖြစ်လဲဆိုတာ ပုံမထုတ်ခင် စစ်မယ်
+        st.write("API အဖြေ -", response.text) 
+        return None
