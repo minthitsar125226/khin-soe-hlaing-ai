@@ -42,8 +42,7 @@ if prompt := st.chat_input("ကိုကို ဘာခိုင်းချင
         if "ပုံဆွဲပေး" in prompt:
             st.markdown("🌸 ခင်စိုးလှိုင်: ခင် ကိုကို့အတွက် ပုံလေး ဖန်တီးပေးနေတယ်နော်... ခဏလေး စောင့်ပေးပါရှင်။")
             try:
-                # ပုံဆွဲရန် API ကို ခေါ်ခြင်း
-                image_bytes =def generate_image(prompt):
+                def generate_image(prompt):
     API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
     headers = {"Authorization": f"Bearer {st.secrets['HUGGINGFACEHUB_API_TOKEN']}"}
     response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
